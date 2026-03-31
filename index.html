@@ -1,719 +1,841 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dr. Alper Nakkas — Academic Profile</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --cream: #f5f0e8;
-      --parchment: #ede5d0;
-      --warm-tan: #c9b99a;
-      --earth: #8b6f47;
-      --deep-earth: #5c4a2a;
-      --moss: #6b7a5e;
-      --rust: #9c5a3c;
-      --ink: #2c2416;
-      --light-moss: #e8ede4;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--cream);
-      color: var(--ink);
-      font-family: 'Lora', Georgia, serif;
-      overflow-x: hidden;
-    }
-
-    nav {
-      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.2rem 4rem;
-      background: rgba(245,240,232,0.92);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--warm-tan);
-      animation: fadeDown 0.8s ease both;
-    }
-
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--deep-earth);
-      text-transform: uppercase;
-    }
-
-    nav ul { list-style: none; display: flex; gap: 2.5rem; }
-
-    nav a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--earth);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    nav a:hover { color: var(--rust); }
-
-    .hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      padding: 8rem 4rem 4rem;
-      gap: 4rem;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -10%; right: -5%;
-      width: 55vw; height: 110vh;
-      background: radial-gradient(ellipse at center, var(--parchment) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-text { animation: fadeUp 1s 0.2s ease both; }
-
-    .hero-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 1.2rem;
-    }
-
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 5.5vw, 5.5rem);
-      font-weight: 300;
-      line-height: 1.05;
-      color: var(--deep-earth);
-      margin-bottom: 0.4rem;
-    }
-
-    h1 em {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--earth);
-    }
-
-    .hero-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      color: var(--moss);
-      margin-bottom: 2rem;
-    }
-
-    .hero-bio {
-      font-size: 1.02rem;
-      line-height: 1.85;
-      color: var(--ink);
-      opacity: 0.85;
-      max-width: 620px;
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-cta {
-      display: flex; gap: 1.2rem; flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: 2px;
-      transition: all 0.25s;
-    }
-
-    .btn-primary {
-      background: var(--deep-earth);
-      color: var(--cream);
-      border: 2px solid var(--deep-earth);
-    }
-    .btn-primary:hover {
-      background: transparent;
-      color: var(--deep-earth);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--earth);
-      border: 2px solid var(--warm-tan);
-    }
-    .btn-secondary:hover {
-      border-color: var(--earth);
-      color: var(--deep-earth);
-    }
-
-    .hero-photo {
-      animation: fadeUp 1s 0.45s ease both;
-      display: flex; justify-content: center; align-items: center;
-    }
-
-    .photo-frame {
-      position: relative;
-      width: min(380px, 90%);
-      aspect-ratio: 3/4;
-    }
-
-    .photo-frame::before {
-      content: '';
-      position: absolute;
-      top: 20px; left: 20px; right: -20px; bottom: -20px;
-      border: 2px solid var(--warm-tan);
-      border-radius: 2px;
-      z-index: 0;
-    }
-
-    .photo-inner {
-      position: relative;
-      z-index: 1;
-      width: 100%; height: 100%;
-      background: linear-gradient(145deg, var(--parchment), var(--warm-tan));
-      border-radius: 2px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .photo-inner img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .photo-label {
-      position: absolute;
-      bottom: 0.85rem;
-      left: 0.85rem;
-      background: rgba(245,240,232,0.92);
-      padding: 0.35rem 0.55rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      color: var(--earth);
-      text-transform: uppercase;
-    }
-
-    section { padding: 6rem 4rem; }
-
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 300;
-      color: var(--deep-earth);
-      margin-bottom: 3rem;
-      line-height: 1.15;
-    }
-
-    .research {
-      background: var(--parchment);
-      border-top: 1px solid var(--warm-tan);
-      border-bottom: 1px solid var(--warm-tan);
-    }
-
-    .research-inner,
-    .teaching-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .research-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-    }
-
-    .research-card {
-      background: var(--cream);
-      padding: 2rem;
-      border-radius: 2px;
-      border-left: 3px solid var(--earth);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .research-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(92,74,42,0.12);
-    }
-
-    .card-icon {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--deep-earth);
-      margin-bottom: 0.6rem;
-    }
-
-    .card-desc {
-      font-size: 0.9rem;
-      line-height: 1.75;
-      color: var(--ink);
-      opacity: 0.75;
-    }
-
-    .publications { max-width: 860px; margin: 0 auto; }
-    .pub-list { list-style: none; display: flex; flex-direction: column; gap: 1.8rem; }
-
-    .pub-item {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 1.5rem;
-      align-items: start;
-      padding-bottom: 1.8rem;
-      border-bottom: 1px solid var(--parchment);
-    }
-
-    .pub-item:last-child { border-bottom: none; }
-
-    .pub-year {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--rust);
-      padding-top: 0.2rem;
-    }
-
-    .pub-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--deep-earth);
-      margin-bottom: 0.3rem;
-    }
-
-    .pub-journal {
-      font-size: 0.85rem;
-      font-style: italic;
-      color: var(--moss);
-      margin-bottom: 0.3rem;
-    }
-
-    .pub-authors {
-      font-size: 0.82rem;
-      color: var(--ink);
-      opacity: 0.65;
-    }
-
-    .teaching { background: var(--light-moss); }
-
-    .courses-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .course-card {
-      background: white;
-      padding: 1.8rem;
-      border-radius: 2px;
-      display: flex; align-items: flex-start; gap: 1.2rem;
-      transition: box-shadow 0.2s;
-    }
-
-    .course-card:hover {
-      box-shadow: 0 8px 24px rgba(107,122,94,0.15);
-    }
-
-    .course-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      color: white;
-      background: var(--moss);
-      padding: 0.3rem 0.6rem;
-      border-radius: 2px;
-      white-space: nowrap;
-      flex-shrink: 0;
-      margin-top: 0.15rem;
-    }
-
-    .course-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--deep-earth);
-      margin-bottom: 0.3rem;
-    }
-
-    .course-info {
-      font-size: 0.82rem;
-      color: var(--ink);
-      opacity: 0.65;
-      line-height: 1.6;
-    }
-
-    .contact-section { max-width: 860px; margin: 0 auto; }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-    }
-
-    .contact-details { display: flex; flex-direction: column; gap: 1.2rem; }
-
-    .contact-item {
-      display: flex; align-items: flex-start; gap: 1rem;
-    }
-
-    .contact-icon {
-      font-size: 1.1rem;
-      width: 28px;
-      flex-shrink: 0;
-      padding-top: 0.1rem;
-    }
-
-    .contact-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 0.15rem;
-    }
-
-    .contact-value {
-      font-size: 0.9rem;
-      color: var(--ink);
-      line-height: 1.6;
-    }
-
-    .contact-value a {
-      color: var(--earth);
-      text-decoration: none;
-    }
-    .contact-value a:hover { text-decoration: underline; }
-
-    .office-note {
-      margin-top: 0;
-      padding: 1.5rem;
-      background: var(--parchment);
-      border-left: 3px solid var(--warm-tan);
-      border-radius: 2px;
-      font-size: 0.88rem;
-      line-height: 1.75;
-      color: var(--ink);
-      opacity: 0.85;
-    }
-
-    footer {
-      background: var(--deep-earth);
-      color: var(--warm-tan);
-      text-align: center;
-      padding: 2.5rem 4rem;
-    }
-
-    footer p {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      opacity: 0.7;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .ornament {
-      text-align: center;
-      font-size: 1.2rem;
-      color: var(--warm-tan);
-      letter-spacing: 0.5em;
-      margin-bottom: 3rem;
-    }
-
-    @media (max-width: 900px) {
-      nav { padding: 1rem 2rem; }
-      nav ul { gap: 1.5rem; }
-
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 7rem 2rem 3rem;
-        text-align: center;
-      }
-
-      .hero::before { display: none; }
-      .hero-bio { max-width: 100%; }
-      .hero-cta { justify-content: center; }
-      .hero-photo { order: -1; }
-      .photo-frame { width: 240px; aspect-ratio: 1; }
-
-      .research-grid, .courses-grid, .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      section { padding: 4rem 2rem; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Alper Nakkas — Associate Professor, UT Arlington</title>
+    <meta name="description" content="Alper Nakkas, Associate Professor of Information Systems and Operations Management at the University of Texas at Arlington. Research in operations management, supply chain management, retail collaboration, category management, and behavioral operations management.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent: #0C4A6E;
+            --accent-light: #E0F2FE;
+            --accent-hover: #075985;
+            --border: #E5E5E3;
+            --border-light: #F0F0EE;
+            --tag-bg: #F3F4F6;
+            --tag-text: #374151;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+            --radius: 10px;
+            --serif: 'Source Serif 4', Georgia, serif;
+            --sans: 'DM Sans', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(250,250,248,0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            transition: box-shadow 0.3s;
+        }
+        nav.scrolled { box-shadow: var(--shadow-sm); }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .nav-logo {
+            font-family: var(--serif);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .hamburger svg { display: block; }
+
+        .hero {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 4rem;
+            align-items: center;
+        }
+        .hero-text h1 {
+            font-family: var(--serif);
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+        }
+        .hero-text .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .hero-text .affiliation {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        .hero-text .affiliation a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .hero-text .affiliation a:hover { text-decoration: underline; }
+        .hero-bio {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+        }
+        .hero-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .hero-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        .hero-photo {
+            width: 300px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--accent-light), #F0F4F8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .hero-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .photo-placeholder {
+            text-align: center;
+            color: var(--accent);
+            font-size: 0.85rem;
+            padding: 1rem;
+        }
+        .photo-placeholder svg { margin-bottom: 0.5rem; }
+
+        .interests {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .tag {
+            display: inline-block;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        .section {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .section + .section { border-top: 1px solid var(--border-light); }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .section-header h2 {
+            font-family: var(--serif);
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        .section-header .line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: box-shadow 0.25s, border-color 0.25s;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #D1D5DB;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .pub-list { display: flex; flex-direction: column; gap: 1rem; }
+        .pub-item {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+        .pub-year {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-top: 0.15rem;
+        }
+        .pub-content h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 0.25rem;
+        }
+        .pub-content h3 a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .pub-content h3 a:hover { color: var(--accent); }
+        .pub-meta {
+            font-size: 0.83rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .pub-meta em { font-style: italic; color: var(--accent); }
+        .pub-links { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .pub-links a {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.2rem 0.6rem;
+            border-radius: 5px;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .pub-links a:hover { border-color: var(--accent); color: var(--accent); }
+
+        .role-card h3,
+        .stream-card h3,
+        .course-card h3,
+        .profile-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-card p,
+        .stream-card p,
+        .course-card p,
+        .profile-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .meta-line {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            color: var(--accent);
+            margin-bottom: 0.45rem;
+        }
+
+        .course-tags,
+        .profile-tags {
+            margin-top: 0.75rem;
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .contact-info-list { display: flex; flex-direction: column; gap: 1.25rem; }
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+        .contact-item .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .contact-item .icon-box svg { color: var(--accent); }
+        .contact-item .label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.15rem;
+        }
+        .contact-item .value {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+        }
+        .contact-item .value a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .contact-item .value a:hover { text-decoration: underline; }
+
+        .connect-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .connect-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .connect-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+        .connect-link svg { color: var(--text-muted); }
+        .connect-link:hover svg { color: var(--accent); }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-in.will-animate {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 6rem 1.25rem 2.5rem;
+            }
+            .hero-photo {
+                width: 200px;
+                order: -1;
+                margin: 0 auto;
+            }
+            .hero-text h1 { font-size: 2rem; }
+            .section { padding: 2.5rem 1.25rem; }
+            .section-header h2 { font-size: 1.4rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+            }
+            .hamburger { display: block; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-logo">Alper Nakkas</div>
-    <ul>
-      <li><a href="#research">Research</a></li>
-      <li><a href="#publications">Publications</a></li>
-      <li><a href="#teaching">Teaching</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-text">
-      <p class="hero-eyebrow">Associate Professor · Information Systems & Operations Management</p>
-      <h1>Dr. Alper<br><em>Nakkas</em></h1>
-      <p class="hero-title">The University of Texas at Arlington · College of Business</p>
-      <p class="hero-bio">
-        I am an Associate Professor in the Department of Information Systems and Operations Management
-        at The University of Texas at Arlington. My research focuses on retail operations, supply chain
-        management, and behavioral operations management, with related interests in game theory,
-        network theory, category management, retail collaboration practices, and revenue management.
-      </p>
-      <div class="hero-cta">
-        <a href="#publications" class="btn btn-primary">View Publications</a>
-        <a href="#contact" class="btn btn-secondary">Get in Touch</a>
-      </div>
-    </div>
-
-    <div class="hero-photo">
-      <div class="photo-frame">
-        <div class="photo-inner">
-          <!-- Replace the src below with your uploaded headshot URL -->
-          <img src="YOUR-HEADSHOT-URL-HERE" alt="Portrait of Dr. Alper Nakkas">
-          <p class="photo-label">Faculty photo</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESEARCH -->
-  <section class="research" id="research">
-    <div class="research-inner">
-      <p class="section-label">Areas of Focus</p>
-      <h2>Research Interests</h2>
-      <div class="ornament">· · ·</div>
-      <div class="research-grid">
-        <div class="research-card">
-          <div class="card-icon">🛒</div>
-          <div class="card-title">Retail Operations & Category Management</div>
-          <p class="card-desc">
-            Research on retail assortment planning, category captainship, planogram design,
-            display fees, and manufacturer–retailer coordination in competitive retail settings.
-          </p>
-        </div>
-        <div class="research-card">
-          <div class="card-icon">🚚</div>
-          <div class="card-title">Supply Chain Management</div>
-          <p class="card-desc">
-            Analytical work on operational decision allocation, supply chain networks, pricing,
-            incentives, and coordination problems across upstream and downstream firms.
-          </p>
-        </div>
-        <div class="research-card">
-          <div class="card-icon">🎯</div>
-          <div class="card-title">Behavioral Operations & Game Theory</div>
-          <p class="card-desc">
-            Theory-driven research on strategic behavior, bargaining, network interactions,
-            and decision-making frictions in operations and supply chain environments.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PUBLICATIONS -->
-  <section id="publications" style="max-width: 860px; margin: 0 auto; padding: 6rem 4rem;">
-    <p class="section-label">Selected Works</p>
-    <h2>Publications</h2>
-    <div class="ornament">· · ·</div>
-    <ul class="pub-list">
-      <li class="pub-item">
-        <span class="pub-year">2024</span>
-        <div>
-          <div class="pub-title">Retail Category Management with Slotting Fees</div>
-          <div class="pub-journal">Manufacturing &amp; Service Operations Management, 26(3): 1119–1136</div>
-          <div class="pub-authors">Alan, Y., Nakkas, A., &amp; Kurtuluş, M.</div>
-        </div>
-      </li>
-      <li class="pub-item">
-        <span class="pub-year">2024</span>
-        <div>
-          <div class="pub-title">Reproducibility in Management Science</div>
-          <div class="pub-journal">Management Science, 70(3): 1343–1356</div>
-          <div class="pub-authors">Fišar, M., Greiner, B., Huber, C., Katok, E., Ozkes, A., the Management Science Reproducibility Collaboration, &amp; collaborators</div>
-        </div>
-      </li>
-      <li class="pub-item">
-        <span class="pub-year">2022</span>
-        <div>
-          <div class="pub-title">Allocation of Operational Decisions in Retail Supply Chains</div>
-          <div class="pub-journal">IIE Transactions, 54(10): 976–987</div>
-          <div class="pub-authors">Kurtuluş, M., Nakkas, A., &amp; Ülkü, S.</div>
-        </div>
-      </li>
-      <li class="pub-item">
-        <span class="pub-year">2020</span>
-        <div>
-          <div class="pub-title">Category Captainship in the Presence of Retail Competition</div>
-          <div class="pub-journal">Production and Operations Management, 29(2): 263–280</div>
-          <div class="pub-authors">Alan, Y., Nakkas, A., &amp; Kurtuluş, M.</div>
-        </div>
-      </li>
-      <li class="pub-item">
-        <span class="pub-year">2019</span>
-        <div>
-          <div class="pub-title">The Impact of Valuation Heterogeneity on Equilibrium Prices in Supply Chain Networks</div>
-          <div class="pub-journal">Production and Operations Management, 28(2): 241–257</div>
-          <div class="pub-authors">Nakkas, A., &amp; Xu, Y.</div>
-        </div>
-      </li>
-      <li class="pub-item">
-        <span class="pub-year">2011</span>
-        <div>
-          <div class="pub-title">Retail Assortment Planning Under Category Captainship</div>
-          <div class="pub-journal">Manufacturing &amp; Service Operations Management, 13(1): 124–142</div>
-          <div class="pub-authors">Kurtuluş, M., &amp; Nakkas, A.</div>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <!-- TEACHING -->
-  <section class="teaching" id="teaching">
-    <div class="teaching-inner">
-      <p class="section-label">Courses</p>
-      <h2>Teaching</h2>
-      <div class="ornament">· · ·</div>
-      <div class="courses-grid">
-        <div class="course-card">
-          <span class="course-num">OPMA</span>
-          <div>
-            <div class="course-name">Supply Chain Analytics</div>
-            <div class="course-info">Undergraduate / master's level · analytics, data-driven decision-making, and supply chain applications</div>
-          </div>
-        </div>
-        <div class="course-card">
-          <span class="course-num">MBA</span>
-          <div>
-            <div class="course-name">Project Management</div>
-            <div class="course-info">MBA course · project planning, scheduling, risk, execution, and practical managerial tools</div>
-          </div>
-        </div>
-        <div class="course-card">
-          <span class="course-num">PhD</span>
-          <div>
-            <div class="course-name">Game Theory</div>
-            <div class="course-info">Doctoral seminar · non-cooperative game theory with applications to operations and supply chains</div>
-          </div>
-        </div>
-        <div class="course-card">
-          <span class="course-num">OSCM</span>
-          <div>
-            <div class="course-name">Operations &amp; Supply Chain Management</div>
-            <div class="course-info">Core teaching interests include operations management, supply chain management, and strategic operational decision-making</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" style="padding: 6rem 4rem;">
-    <div class="contact-section">
-      <p class="section-label">Get in Touch</p>
-      <h2>Contact</h2>
-      <div class="ornament">· · ·</div>
-      <div class="contact-grid">
-        <div class="contact-details">
-          <div class="contact-item">
-            <span class="contact-icon">✉</span>
-            <div>
-              <div class="contact-label">Email</div>
-              <div class="contact-value"><a href="mailto:nakkas@uta.edu">nakkas@uta.edu</a></div>
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">A<span>.</span> Nakkas</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#roles">Roles</a>
+                <a href="#research">Research</a>
+                <a href="#streams">Research Streams</a>
+                <a href="#teaching">Teaching</a>
+                <a href="#profile">Background</a>
+                <a href="https://nakkaslab.uta.edu/files/2025/10/AlperNakkas_CV-2025.pdf" target="_blank" rel="noopener">CV</a>
+                <a href="#contact">Contact</a>
             </div>
-          </div>
+            <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+    </nav>
 
-          <div class="contact-item">
-            <span class="contact-icon">🏛</span>
-            <div>
-              <div class="contact-label">Affiliation</div>
-              <div class="contact-value">
-                Department of Information Systems &amp; Operations Management<br>
-                College of Business<br>
-                The University of Texas at Arlington
-              </div>
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Alper Nakkas</h1>
+            <p class="subtitle">Associate Professor of Information Systems &amp; Operations Management</p>
+            <p class="affiliation">
+                <a href="https://www.uta.edu/academics/schools-colleges/business/departments/information-systems-and-operations-management" target="_blank" rel="noopener">Department of Information Systems &amp; Operations Management</a><br>
+                College of Business · <a href="https://www.uta.edu" target="_blank" rel="noopener">The University of Texas at Arlington</a>
+            </p>
+            <div class="interests">
+                <span class="tag">Operations Management</span>
+                <span class="tag">Supply Chain Management</span>
+                <span class="tag">Retail Operations</span>
+                <span class="tag">Category Management</span>
+                <span class="tag">Behavioral Operations</span>
+                <span class="tag">Network Theory</span>
             </div>
-          </div>
+            <p class="hero-bio">
+                I am an Associate Professor at The University of Texas at Arlington. My research focuses on retail operations,
+                supply chain management, and behavioral operations management. I study manufacturer–retailer interactions,
+                category captainship, assortment and planogram decisions, supply chain networks, and related strategic
+                questions in operations and management science.
+            </p>
+            <div class="hero-links">
+                <a href="mailto:nakkas@uta.edu" class="btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h12v10H4z"/><path d="M4 4l6 5 6-5"/></svg>
+                    Contact
+                </a>
+                <a href="https://nakkaslab.uta.edu/files/2025/10/AlperNakkas_CV-2025.pdf" target="_blank" rel="noopener" class="btn-outline">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H4a1 1 0 00-1 1v12l3-2 3 2 3-2 3 2V3a1 1 0 00-1-1z"/></svg>
+                    Download CV
+                </a>
+                <a href="https://scholar.google.com/citations?hl=en&user=ZWYSu2cAAAAJ" target="_blank" rel="noopener" class="btn-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+                    Google Scholar
+                </a>
+            </div>
+        </div>
+        <div class="hero-photo">
+            <img src="images/alper-nakkas-headshot.jpg" alt="Dr. Alper Nakkas">
+        </div>
+    </section>
 
-          <div class="contact-item">
-            <span class="contact-icon">🔗</span>
-            <div>
-              <div class="contact-label">Profiles</div>
-              <div class="contact-value">
-                <a href="https://nakkaslab.uta.edu/" target="_blank" rel="noopener noreferrer">Personal Website</a>
-                &nbsp;·&nbsp;
-                <a href="https://nakkaslab.uta.edu/research/" target="_blank" rel="noopener noreferrer">Research</a>
-                &nbsp;·&nbsp;
-                <a href="https://www.uta.edu/academics/schools-colleges/business/departments/information-systems-and-operations-management/faculty-and-staff" target="_blank" rel="noopener noreferrer">UTA Profile</a>
-              </div>
+    <!-- ═══ ROLES ═══ -->
+    <section class="section fade-in" id="roles">
+        <div class="section-header">
+            <h2>Academic Roles</h2>
+            <div class="line"></div>
+        </div>
+        <div class="card-grid">
+            <div class="card role-card">
+                <p class="meta-line">Current</p>
+                <h3>Associate Professor</h3>
+                <p>Department of Information Systems &amp; Operations Management, College of Business, The University of Texas at Arlington.</p>
             </div>
-          </div>
+            <div class="card role-card">
+                <p class="meta-line">Program Leadership</p>
+                <h3>PhD Coordinator — OPMA</h3>
+                <p>Faculty leadership role supporting the Operations and Management Science doctoral area in UTA’s College of Business.</p>
+            </div>
+            <div class="card role-card">
+                <p class="meta-line">Graduate Advising</p>
+                <h3>PhD Program Advisor, Management Science</h3>
+                <p>Listed by UTA Graduate School as the graduate advisor for Management Science within the PhD in Business Administration program.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ RESEARCH & PUBLICATIONS ═══ -->
+    <section class="section fade-in" id="research">
+        <div class="section-header">
+            <h2>Research &amp; Publications</h2>
+            <div class="line"></div>
+        </div>
+        <div class="pub-list">
+            <div class="pub-item">
+                <div class="pub-year">2025</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">The Impact of Planogram Design and Display Fees on Retail Category Management</a></h3>
+                    <p class="pub-meta">Y. Alan, A. Nakkas, and M. Kurtuluş · <em>Production and Operations Management</em> · forthcoming</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2024</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">Retail Category Management with Slotting Fees</a></h3>
+                    <p class="pub-meta">Y. Alan, A. Nakkas, and M. Kurtuluş · <em>Manufacturing &amp; Service Operations Management</em>, 26(3): 1119–1136</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2024</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">Reproducibility in Management Science</a></h3>
+                    <p class="pub-meta">M. Fišar, B. Greiner, C. Huber, E. Katok, A. Ozkes, the Management Science Reproducibility Collaboration, and collaborators · <em>Management Science</em>, 70(3): 1343–1356</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2022</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">Allocation of Operational Decisions in Retail Supply Chains</a></h3>
+                    <p class="pub-meta">M. Kurtuluş, A. Nakkas, and S. Ülkü · <em>IIE Transactions</em>, 54(10): 976–987</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2021</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">Inventory Positions in US Manufacturing: A Competitive Dynamics Approach</a></h3>
+                    <p class="pub-meta">R. Mishra, A. A. Rasheed, M. Yasar, R. Napier, and A. Nakkas · <em>International Journal of Production Economics</em>, 238: 108167</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2020</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">Category Captainship in the Presence of Retail Competition</a></h3>
+                    <p class="pub-meta">Y. Alan, A. Nakkas, and M. Kurtuluş · <em>Production and Operations Management</em>, 29(2): 263–280</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2019</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">The Impact of Valuation Heterogeneity on Equilibrium Prices in Supply Chain Networks</a></h3>
+                    <p class="pub-meta">A. Nakkas and Y. Xu · <em>Production and Operations Management</em>, 28(2): 241–257</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2014</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">The Impact of Category Captainship on the Breadth and Appeal of Retail Assortment</a></h3>
+                    <p class="pub-meta">J. P. Datson, M. Kurtuluş, S. Ülkü, and A. Nakkas · <em>Journal of Retailing</em>, 90(3): 379–392</p>
+                </div>
+            </div>
+
+            <div class="pub-item">
+                <div class="pub-year">2011</div>
+                <div class="pub-content">
+                    <h3><a href="https://doi.org/" target="_blank" rel="noopener">Retail Assortment Planning Under Category Captainship</a></h3>
+                    <p class="pub-meta">M. Kurtuluş and A. Nakkas · <em>Manufacturing &amp; Service Operations Management</em>, 13(1): 124–142</p>
+                </div>
+            </div>
         </div>
 
-        <div>
-          <div class="office-note">
-            <strong>Academic Profile</strong><br><br>
-            PhD in Economics, Vanderbilt University.<br>
-            Previous faculty appointments include NOVA School of Management and SKK Graduate School of Business,
-            with visiting positions at MIT Sloan School of Management and McGill University.<br><br>
-            For a full CV, working papers, and additional publications, you can add a Vita or CV link here.
-          </div>
+        <p style="margin-top:1.5rem; font-size:0.85rem; color:var(--text-muted);">
+            → See the full list on
+            <a href="https://scholar.google.com/citations?hl=en&user=ZWYSu2cAAAAJ" style="color:var(--accent); text-decoration:none;" target="_blank" rel="noopener">Google Scholar</a>
+            or on the
+            <a href="https://nakkaslab.uta.edu/research/" style="color:var(--accent); text-decoration:none;" target="_blank" rel="noopener">research page</a>.
+        </p>
+    </section>
+
+    <!-- ═══ RESEARCH STREAMS ═══ -->
+    <section class="section fade-in" id="streams">
+        <div class="section-header">
+            <h2>Research Streams</h2>
+            <div class="line"></div>
         </div>
-      </div>
-    </div>
-  </section>
+        <div class="card-grid">
+            <div class="card stream-card">
+                <h3>Retail Operations &amp; Category Management</h3>
+                <p>Assortment planning, category captainship, slotting fees, display and planogram decisions, and retailer–manufacturer coordination.</p>
+            </div>
+            <div class="card stream-card">
+                <h3>Supply Chain Management</h3>
+                <p>Strategic interaction across supply chain partners, operational decision allocation, pricing, incentives, and network structure.</p>
+            </div>
+            <div class="card stream-card">
+                <h3>Behavioral Operations Management</h3>
+                <p>How strategic behavior, bargaining, and decision frictions shape performance in operations and supply chain contexts.</p>
+            </div>
+            <div class="card stream-card">
+                <h3>Network Theory in Operations</h3>
+                <p>Analytical work on how network position, valuation heterogeneity, and structure affect equilibrium outcomes.</p>
+            </div>
+        </div>
+    </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 Dr. Alper Nakkas · The University of Texas at Arlington · Information Systems &amp; Operations Management</p>
-  </footer>
+    <!-- ═══ TEACHING ═══ -->
+    <section class="section fade-in" id="teaching">
+        <div class="section-header">
+            <h2>Teaching</h2>
+            <div class="line"></div>
+        </div>
+        <div class="card-grid">
+            <div class="card course-card">
+                <p class="meta-line">MBA</p>
+                <h3>Project Management</h3>
+                <p>Introductory MBA-level course covering project planning, scheduling, risk, execution, and practical tools for managing projects in organizations.</p>
+                <div class="course-tags">
+                    <span class="tag">MBA</span>
+                    <span class="tag">Project Management</span>
+                </div>
+            </div>
+            <div class="card course-card">
+                <p class="meta-line">PhD</p>
+                <h3>Game Theory</h3>
+                <p>Doctoral seminar in noncooperative game theory with applications to operations, supply chains, bargaining, and strategic interaction.</p>
+                <div class="course-tags">
+                    <span class="tag">Doctoral</span>
+                    <span class="tag">Theory</span>
+                </div>
+            </div>
+            <div class="card course-card">
+                <p class="meta-line">Analytics</p>
+                <h3>Supply Chain Analytics</h3>
+                <p>Data-driven analysis of supply chain decisions, quantitative modeling, and managerial interpretation of operational data.</p>
+                <div class="course-tags">
+                    <span class="tag">Analytics</span>
+                    <span class="tag">Supply Chain</span>
+                </div>
+            </div>
+            <div class="card course-card">
+                <p class="meta-line">Operations</p>
+                <h3>Operations &amp; Supply Chain Management</h3>
+                <p>Core concepts in process analysis, inventory, coordination, operational trade-offs, and strategic operations decisions.</p>
+                <div class="course-tags">
+                    <span class="tag">Operations</span>
+                    <span class="tag">Supply Chain</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- ═══ BACKGROUND ═══ -->
+    <section class="section fade-in" id="profile">
+        <div class="section-header">
+            <h2>Background</h2>
+            <div class="line"></div>
+        </div>
+        <div class="card-grid">
+            <div class="card profile-card">
+                <p class="meta-line">Education</p>
+                <h3>PhD in Economics</h3>
+                <p>Received a PhD in Economics from Vanderbilt University.</p>
+                <div class="profile-tags">
+                    <span class="tag">Vanderbilt University</span>
+                </div>
+            </div>
+            <div class="card profile-card">
+                <p class="meta-line">Previous Appointments</p>
+                <h3>International Faculty Experience</h3>
+                <p>Held faculty positions at NOVA School of Management in Portugal and SKK Graduate School of Business in South Korea.</p>
+                <div class="profile-tags">
+                    <span class="tag">NOVA</span>
+                    <span class="tag">SKK GSB</span>
+                </div>
+            </div>
+            <div class="card profile-card">
+                <p class="meta-line">Visiting Positions</p>
+                <h3>MIT Sloan &amp; McGill</h3>
+                <p>Previously served in visiting faculty roles at MIT Sloan School of Management and McGill University.</p>
+                <div class="profile-tags">
+                    <span class="tag">MIT Sloan</span>
+                    <span class="tag">McGill</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section class="section fade-in" id="contact">
+        <div class="section-header">
+            <h2>Contact</h2>
+            <div class="line"></div>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info-list">
+                <div class="contact-item">
+                    <div class="icon-box">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 4l8 6 8-6"/></svg>
+                    </div>
+                    <div>
+                        <p class="label">Email</p>
+                        <p class="value"><a href="mailto:nakkas@uta.edu">nakkas@uta.edu</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="icon-box">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div>
+                        <p class="label">Department</p>
+                        <p class="value">Information Systems &amp; Operations Management<br>College of Business<br>The University of Texas at Arlington</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="icon-box">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    </div>
+                    <div>
+                        <p class="label">Availability</p>
+                        <p class="value">Please email to schedule an appointment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connect-links">
+                <a href="https://scholar.google.com/citations?hl=en&user=ZWYSu2cAAAAJ" target="_blank" rel="noopener" class="connect-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+                    Google Scholar
+                </a>
+                <a href="https://nakkaslab.uta.edu/" target="_blank" rel="noopener" class="connect-link">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z"/></svg>
+                    Personal Website
+                </a>
+                <a href="https://nakkaslab.uta.edu/research/" target="_blank" rel="noopener" class="connect-link">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M12 4h9"/><path d="M4 9h16"/><path d="M4 15h16"/></svg>
+                    Research Page
+                </a>
+                <a href="https://www.uta.edu/academics/faculty/profile?user=nakkas" target="_blank" rel="noopener" class="connect-link">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                    UTA Faculty Profile
+                </a>
+                <a href="https://nakkaslab.uta.edu/files/2025/10/AlperNakkas_CV-2025.pdf" target="_blank" rel="noopener" class="connect-link">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Curriculum Vitae
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <p>&copy; 2026 Alper Nakkas · Associate Professor · <a href="https://www.uta.edu" target="_blank" rel="noopener">The University of Texas at Arlington</a></p>
+    </footer>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script>
+        const nav = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 20);
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+
+        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('will-animate'));
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 90;
+                if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
