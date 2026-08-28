@@ -66,13 +66,21 @@
 <div class="container">
     <a href="../games.html" style="color: var(--accent); text-decoration: none; font-size: 0.85rem;">← Back to Games Hub</a>
     <h1 style="margin-top: 0.5rem;">Agile vs. Waterfall Challenge</h1>
-    <p class="subtitle">Navigate changing project requirements across operational phases.</p>
+    <p class="subtitle">Navigate changing project requirements across 4 operational phases.</p>
 
     <!-- STUDENT DECISION CARD -->
     <div class="card">
         <span class="status-badge">Student Portal</span>
         <h2>Submit Project Allocation</h2>
         
+        <label for="student-phase">Current Project Phase</label>
+        <select id="student-phase">
+            <option value="1">Phase 1</option>
+            <option value="2">Phase 2</option>
+            <option value="3">Phase 3</option>
+            <option value="4">Phase 4</option>
+        </select>
+
         <label for="team-name">Team / Student Name</label>
         <input type="text" id="team-name" placeholder="e.g., Team Alpha">
 
@@ -80,10 +88,13 @@
         <input type="text" id="class-code" placeholder="e.g., PM-MBA-2026">
 
         <label for="methodology">Methodology</label>
-        <select id="methodology">
-            <option value="Waterfall">Waterfall (Fixed 4-Phase Plan)</option>
-            <option value="Agile">Agile (Iterative Allocation)</option>
+        <select id="methodology" onchange="toggleWaterfallLock()">
+            <option value="Agile">Agile (Adjust points each phase)</option>
+            <option value="Waterfall">Waterfall (Fixed allocation for all 4 phases)</option>
         </select>
+        <p id="waterfall-notice" style="font-size: 0.75rem; color: #d9534f; display: none; margin-top: 0.25rem;">
+            Note: Waterfall teams set their plan in Phase 1. Submitting in later phases carries forward Phase 1 values.
+        </p>
 
         <h3 style="margin-top: 1.25rem; font-size: 1rem;">Allocate 100 Points Across Features</h3>
         <p style="font-size: 0.8rem; color: var(--text-secondary);">Total points allocated across all features must equal exactly 100.</p>
@@ -107,17 +118,26 @@
             </div>
         </div>
 
-        <button onclick="submitAllocation()">Submit Allocation</button>
-        <p id="student-status" style="margin-top: 0.5rem; font-size: 0.85rem;"></p>
+        <button onclick="submitAllocation()">Submit Allocation for Selected Phase</button>
+        <p id="student-status" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--accent); font-weight: 500;"></p>
     </div>
 
     <!-- INSTRUCTOR DASHBOARD (Hidden by Default) -->
     <div class="card admin-panel" id="admin-card" style="display: none;">
         <h2>Instructor Controls</h2>
+        
         <label for="admin-class-code">Class Code</label>
         <input type="text" id="admin-class-code" placeholder="Enter Class Code">
 
-        <h3 style="margin-top: 1rem; font-size: 0.95rem;">Current Phase Market Weights</h3>
+        <label for="admin-phase">Evaluate Phase</label>
+        <select id="admin-phase">
+            <option value="1">Phase 1 Market Weights</option>
+            <option value="2">Phase 2 Market Weights</option>
+            <option value="3">Phase 3 Market Weights</option>
+            <option value="4">Phase 4 Market Weights</option>
+        </select>
+
+        <h3 style="margin-top: 1rem; font-size: 0.95rem;">Set Market Priority Weights for Selected Phase</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem;">
             <div>
                 <label for="market-core">Weight: Core</label>
@@ -137,8 +157,8 @@
             </div>
         </div>
 
-        <button onclick="calculateScores()">Calculate Phase Results</button>
-        <button class="btn-secondary" onclick="exportData()">Export Results to CSV</button>
+        <button onclick="calculateScores()">Calculate &amp; Update Leaderboard</button>
+        <button class="btn-secondary" onclick="exportData()">Export All Phase Data to CSV</button>
 
         <div id="leaderboard"></div>
     </div>
@@ -163,15 +183,18 @@ const firebaseConfig = {
   appId: "1:512097332337:web:259d83f5d856d2807cbfd0",
   measurementId: "G-XBFQ3F6RZV"
 };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- INSTRUCTOR UNLOCK FUNCTION ---
+    function toggleWaterfallLock() {
+        const method = document.getElementById('methodology').value;
+        const notice = document.getElementById('waterfall-notice');
+        notice.style.display = (method === 'Waterfall') ? 'block' : 'none';
+    }
+
     function unlockAdmin() {
         const password = prompt("Enter Instructor Passcode:");
-        // Replace '1234' with your preferred passcode
-        if (password === "nakkas") { 
+        if (password === "1234") { 
             const adminCard = document.getElementById('admin-card');
             adminCard.style.display = 'block';
             adminCard.scrollIntoView({ behavior: 'smooth' });
@@ -180,23 +203,39 @@ const firebaseConfig = {
         }
     }
 
-    // --- STUDENT SUBMISSION ---
     function submitAllocation() {
+        const phase = document.getElementById('student-phase').value;
         const team = document.getElementById('team-name').value.trim();
         const code = document.getElementById('class-code').value.trim().toUpperCase();
         const method = document.getElementById('methodology').value;
         
-        const core = parseFloat(document.getElementById('feat-core').value) || 0;
-        const ux = parseFloat(document.getElementById('feat-ux').value) || 0;
-        const security = parseFloat(document.getElementById('feat-security').value) || 0;
-        const analytics = parseFloat(document.getElementById('feat-analytics').value) || 0;
+        let core = parseFloat(document.getElementById('feat-core').value) || 0;
+        let ux = parseFloat(document.getElementById('feat-ux').value) || 0;
+        let security = parseFloat(document.getElementById('feat-security').value) || 0;
+        let analytics = parseFloat(document.getElementById('feat-analytics').value) || 0;
 
         if (!team || !code) return alert("Please enter Team Name and Class Code.");
-        if ((core + ux + security + analytics) !== 100) {
-            return alert(`Total points must equal 100. Current total: ${core + ux + security + analytics}`);
-        }
 
-        db.ref(`agile_game/${code}/${team}`).set({
+        // If Waterfall and phase > 1, fetch Phase 1 numbers to enforce scope lock
+        if (method === 'Waterfall' && phase !== "1") {
+            db.ref(`agile_game/${code}/Phase_1/${team}`).once('value', snapshot => {
+                const phase1Data = snapshot.val();
+                if (!phase1Data) {
+                    alert("Waterfall teams must submit Phase 1 first to establish their baseline plan.");
+                    return;
+                }
+                saveSubmission(code, phase, team, method, phase1Data.core, phase1Data.ux, phase1Data.security, phase1Data.analytics);
+            });
+        } else {
+            if ((core + ux + security + analytics) !== 100) {
+                return alert(`Total points must equal 100. Current total: ${core + ux + security + analytics}`);
+            }
+            saveSubmission(code, phase, team, method, core, ux, security, analytics);
+        }
+    }
+
+    function saveSubmission(code, phase, team, method, core, ux, security, analytics) {
+        db.ref(`agile_game/${code}/Phase_${phase}/${team}`).set({
             methodology: method,
             core: core,
             ux: ux,
@@ -204,13 +243,15 @@ const firebaseConfig = {
             analytics: analytics,
             timestamp: new Date().toISOString()
         }).then(() => {
-            document.getElementById('student-status').innerText = "Allocation submitted successfully!";
+            const nextPhase = parseInt(phase) < 4 ? parseInt(phase) + 1 : 4;
+            document.getElementById('student-status').innerText = `Phase ${phase} allocation submitted! Next: Select Phase ${nextPhase} when instructed.`;
+            document.getElementById('student-phase').value = nextPhase.toString();
         }).catch(err => alert("Error: " + err.message));
     }
 
-    // --- SCORING SYSTEM ---
     function calculateScores() {
         const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
+        const evalPhase = document.getElementById('admin-phase').value;
         if (!code) return alert("Enter Class Code.");
 
         const wCore = parseFloat(document.getElementById('market-core').value) || 0;
@@ -218,15 +259,23 @@ const firebaseConfig = {
         const wSec = parseFloat(document.getElementById('market-security').value) || 0;
         const wAna = parseFloat(document.getElementById('market-analytics').value) || 0;
 
+        // Save phase market weights
+        db.ref(`agile_game/${code}/Market_Phase_${evalPhase}`).set({
+            core: wCore, ux: wUX, security: wSec, analytics: wAna
+        });
+
         db.ref(`agile_game/${code}`).once('value', snapshot => {
-            const data = snapshot.val();
-            if (!data) return alert("No submissions found.");
+            const allData = snapshot.val();
+            if (!allData) return alert("No submissions found.");
 
-            let html = `<table><tr><th>Team</th><th>Method</th><th>Alignment Score</th></tr>`;
-            const entries = Object.keys(data);
+            const phaseData = allData[`Phase_${evalPhase}`];
+            if (!phaseData) return alert(`No team submissions found for Phase ${evalPhase}.`);
 
-            entries.forEach(teamKey => {
-                const team = data[teamKey];
+            let html = `<h3>Leaderboard (Phase ${evalPhase} Evaluation)</h3>`;
+            html += `<table><tr><th>Team</th><th>Method</th><th>Phase ${evalPhase} Score</th></tr>`;
+
+            Object.keys(phaseData).forEach(teamKey => {
+                const team = phaseData[teamKey];
                 const score = (team.core * (wCore/100)) + 
                               (team.ux * (wUX/100)) + 
                               (team.security * (wSec/100)) + 
@@ -244,7 +293,6 @@ const firebaseConfig = {
         });
     }
 
-    // --- CSV EXPORT ---
     function exportData() {
         const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
         if (!code) return alert("Enter Class Code.");
@@ -253,15 +301,20 @@ const firebaseConfig = {
             const data = snapshot.val();
             if (!data) return alert("No data to export.");
 
-            let csv = "Team,Methodology,Core,UX,Security,Analytics,Timestamp\n";
-            Object.keys(data).forEach(k => {
-                const t = data[k];
-                csv += `"${k}","${t.methodology}",${t.core},${t.ux},${t.security},${t.analytics},"${t.timestamp}"\n`;
+            let csv = "Phase,Team,Methodology,Core,UX,Security,Analytics,Timestamp\n";
+            [1, 2, 3, 4].forEach(p => {
+                const pKey = `Phase_${p}`;
+                if (data[pKey]) {
+                    Object.keys(data[pKey]).forEach(k => {
+                        const t = data[pKey][k];
+                        csv += `"${p}","${k}","${t.methodology}",${t.core},${t.ux},${t.security},${t.analytics},"${t.timestamp}"\n`;
+                    });
+                }
             });
 
             const link = document.createElement("a");
             link.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
-            link.download = `${code}_agile_waterfall_data.csv`;
+            link.download = `${code}_agile_waterfall_full_game.csv`;
             link.click();
         });
     }
