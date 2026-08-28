@@ -97,7 +97,7 @@
     </div>
 
     <!-- INSTRUCTOR DASHBOARD -->
-    <div class="card admin-panel">
+    <div class="card admin-panel" id="admin-card" style="display: none;">
         <h2>Instructor Controls</h2>
         <label for="admin-class-code">Class Code</label>
         <input type="text" id="admin-class-code" placeholder="Enter Class Code">
@@ -230,6 +230,13 @@
             link.click();
         });
     }
+
+    // Show admin panel only if '?admin=true' is in the URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('admin') === 'true') {
+    document.getElementById('admin-card').style.display = 'block';
+}
+
 </script>
 </body>
 </html>
