@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agile vs. Waterfall Challenge — Dr. Alper Nakkas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --accent: #0C4A6E;
+            --accent-light: #E0F2FE;
+            --accent-hover: #075985;
+            --border: #E5E5E3;
+            --radius: 10px;
+            --sans: 'DM Sans', -apple-system, sans-serif;
+            --serif: 'Source Serif 4', Georgia, serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text-primary); line-height: 1.6; padding: 2rem 1rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+        h1, h2, h3 { font-family: var(--serif); color: var(--text-primary); }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        
+        label { font-weight: 500; font-size: 0.85rem; display: block; margin-top: 0.75rem; }
+        input, select, button { width: 100%; padding: 0.6rem; margin-top: 0.25rem; border: 1px solid var(--border); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; }
+        button { background: var(--accent); color: white; font-weight: 600; cursor: pointer; border: none; margin-top: 1rem; transition: background 0.2s; }
+        button:hover { background: var(--accent-hover); }
+        .btn-secondary { background: #6C757D; }
+        .btn-secondary:hover { background: #5A6268; }
+
+        .resource-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+        .admin-panel { background: #F3F4F6; border-color: #D1D5DB; }
+        .status-badge { font-family: var(--mono); font-size: 0.8rem; background: var(--accent-light); color: var(--accent); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+        th, td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+        th { background: #F9FAFB; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../games.html" style="color: var(--accent); text-decoration: none; font-size: 0.85rem;">← Back to Games Hub</a>
+    <h1 style="margin-top: 0.5rem;">Agile vs. Waterfall Challenge</h1>
+    <p class="subtitle">Navigate changing project requirements across 4 operational phases.</p>
+
+    <!-- STUDENT DECISION CARD -->
+    <div class="card">
+        <span class="status-badge" id="current-phase-badge">Phase 1 of 4</span>
+        <h2>Student Decision Portal</h2>
+        
+        <label for="team-name">Team / Student Name</label>
+        <input type="text" id="team-name" placeholder="e.g., Team Alpha">
+
+        <label for="class-code">Class Code</label>
+        <input type="text" id="class-code" placeholder="e.g., PM-MBA-2026">
+
+        <label for="methodology">Methodology</label>
+        <select id="methodology">
+            <option value="Waterfall">Waterfall (Fixed 4-Phase Plan)</option>
+            <option value="Agile">Agile (Iterative Allocation)</option>
+        </select>
+
+        <h3 style="margin-top: 1.25rem; font-size: 1rem;">Allocate 100 Points Across Features</h3>
+        <p style="font-size: 0.8rem; color: var(--text-secondary);">Total points allocated across all features must equal exactly 100.</p>
+
+        <div class="resource-group">
+            <div>
+                <label for="feat-core">Core Functionality</label>
+                <input type="number" id="feat-core" value="25" min="0" max="100">
+            </div>
+            <div>
+                <label for="feat-ux">UI / UX Design</label>
+                <input type="number" id="feat-ux" value="25" min="0" max="100">
+            </div>
+            <div>
+                <label for="feat-security">Security & Compliance</label>
+                <input type="number" id="feat-security" value="25" min="0" max="100">
+            </div>
+            <div>
+                <label for="feat-analytics">Advanced Analytics</label>
+                <input type="number" id="feat-analytics" value="25" min="0" max="100">
+            </div>
+        </div>
+
+        <button onclick="submitAllocation()">Submit Project Allocation</button>
+        <p id="student-status" style="margin-top: 0.5rem; font-size: 0.85rem;"></p>
+    </div>
+
+    <!-- INSTRUCTOR DASHBOARD -->
+    <div class="card admin-panel">
+        <h2>Instructor Controls</h2>
+        <label for="admin-class-code">Class Code</label>
+        <input type="text" id="admin-class-code" placeholder="Enter Class Code">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+            <div>
+                <label for="market-core">Phase Weight: Core</label>
+                <input type="number" id="market-core" value="40">
+            </div>
+            <div>
+                <label for="market-ux">Phase Weight: UX</label>
+                <input type="number" id="market-ux" value="30">
+            </div>
+            <div>
+                <label for="market-security">Phase Weight: Security</label>
+                <input type="number" id="market-security" value="20">
+            </div>
+            <div>
+                <label for="market-analytics">Phase Weight: Analytics</label>
+                <input type="number" id="market-analytics" value="10">
+            </div>
+        </div>
+
+        <button onclick="calculateScores()">Calculate Phase Results</button>
+        <button class="btn-secondary" onclick="exportData()">Export Results to CSV</button>
+
+        <div id="leaderboard"></div>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+   const firebaseConfig = {
+    apiKey: "AIzaSy...", 
+    authDomain: "your-project-id.firebaseapp.com",
+    databaseURL: "https://your-project-id-default-rtdb.firebaseio.com", // Ensure this line exists!
+    projectId: "your-project-id",
+    storageBucket: "your-project-id.appspot.com",
+    messagingSenderId: "123456789...",
+    appId: "1:123456789...:web:..."
+};
+
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function submitAllocation() {
+        const team = document.getElementById('team-name').value.trim();
+        const code = document.getElementById('class-code').value.trim().toUpperCase();
+        const method = document.getElementById('methodology').value;
+        
+        const core = parseFloat(document.getElementById('feat-core').value) || 0;
+        const ux = parseFloat(document.getElementById('feat-ux').value) || 0;
+        const security = parseFloat(document.getElementById('feat-security').value) || 0;
+        const analytics = parseFloat(document.getElementById('feat-analytics').value) || 0;
+
+        if (!team || !code) return alert("Please enter Team Name and Class Code.");
+        if ((core + ux + security + analytics) !== 100) {
+            return alert(`Total points must equal 100. Current total: ${core + ux + security + analytics}`);
+        }
+
+        db.ref(`agile_game/${code}/${team}`).set({
+            methodology: method,
+            core: core,
+            ux: ux,
+            security: security,
+            analytics: analytics,
+            timestamp: new Date().toISOString()
+        }).then(() => {
+            document.getElementById('student-status').innerText = "Allocation submitted successfully!";
+        }).catch(err => alert("Error: " + err.message));
+    }
+
+    function calculateScores() {
+        const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
+        if (!code) return alert("Enter Class Code.");
+
+        const wCore = parseFloat(document.getElementById('market-core').value) || 0;
+        const wUX = parseFloat(document.getElementById('market-ux').value) || 0;
+        const wSec = parseFloat(document.getElementById('market-security').value) || 0;
+        const wAna = parseFloat(document.getElementById('market-analytics').value) || 0;
+
+        db.ref(`agile_game/${code}`).once('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) return alert("No submissions found.");
+
+            let html = `<table><tr><th>Team</th><th>Method</th><th>Alignment Score</th></tr>`;
+            const entries = Object.keys(data);
+
+            entries.forEach(teamKey => {
+                const team = data[teamKey];
+                // Alignment score calculation using dot product of team choices & market weights
+                const score = (team.core * (wCore/100)) + 
+                              (team.ux * (wUX/100)) + 
+                              (team.security * (wSec/100)) + 
+                              (team.analytics * (wAna/100));
+
+                html += `<tr>
+                    <td><strong>${teamKey}</strong></td>
+                    <td>${team.methodology}</td>
+                    <td>${(score * 10).toFixed(1)} pts</td>
+                </tr>`;
+            });
+
+            html += `</table>`;
+            document.getElementById('leaderboard').innerHTML = html;
+        });
+    }
+
+    function exportData() {
+        const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
+        if (!code) return alert("Enter Class Code.");
+
+        db.ref(`agile_game/${code}`).once('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) return alert("No data to export.");
+
+            let csv = "Team,Methodology,Core,UX,Security,Analytics,Timestamp\n";
+            Object.keys(data).forEach(k => {
+                const t = data[k];
+                csv += `"${k}","${t.methodology}",${t.core},${t.ux},${t.security},${t.analytics},"${t.timestamp}"\n`;
+            });
+
+            const link = document.createElement("a");
+            link.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+            link.download = `${code}_agile_waterfall_data.csv`;
+            link.click();
+        });
+    }
+</script>
+</body>
+</html>
