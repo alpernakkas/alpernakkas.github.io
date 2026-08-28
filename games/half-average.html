@@ -3,37 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Half of the Average Game</title>
+    <title>Half of the Average Game — Dr. Alper Nakkas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
-        .card { border: 1px solid #ccc; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; }
-        input, button { padding: 0.5rem; margin: 0.5rem 0; width: 100%; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        .secondary-btn { background: #6c757d; }
-        .secondary-btn:hover { background: #5a6268; }
-        .admin-panel { background: #f4f4f4; border-color: #aaa; }
-        #timer-display { font-size: 1.5rem; font-weight: bold; color: #d9534f; text-align: center; }
+        :root {
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent: #0C4A6E;
+            --accent-light: #E0F2FE;
+            --accent-hover: #075985;
+            --border: #E5E5E3;
+            --radius: 10px;
+            --sans: 'DM Sans', -apple-system, sans-serif;
+            --serif: 'Source Serif 4', Georgia, serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text-primary); line-height: 1.6; padding: 2rem 1rem; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+        h1, h2, h3 { font-family: var(--serif); color: var(--text-primary); }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        
+        label { font-weight: 500; font-size: 0.85rem; display: block; margin-top: 0.75rem; }
+        input, button { width: 100%; padding: 0.6rem; margin-top: 0.25rem; border: 1px solid var(--border); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; box-sizing: border-box; }
+        button { background: var(--accent); color: white; font-weight: 600; cursor: pointer; border: none; margin-top: 1rem; transition: background 0.2s; }
+        button:hover { background: var(--accent-hover); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: #6C757D; }
+        .btn-secondary:hover { background: #5A6268; }
+
+        .admin-panel { background: #F3F4F6; border-color: #D1D5DB; }
+        .status-badge { font-family: var(--mono); font-size: 0.8rem; background: var(--accent-light); color: var(--accent); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.5rem; }
+        #timer-display { font-size: 1.25rem; font-weight: 600; color: #d9534f; text-align: center; margin-bottom: 0.5rem; }
+
+        .admin-toggle-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px dashed var(--border);
+            font-size: 0.78rem;
+            font-weight: 400;
+            padding: 0.4rem;
+            margin-top: 2rem;
+        }
+        .admin-toggle-btn:hover {
+            background: #E5E5E3;
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
 
-    <h2>Half of the Average Game</h2>
+<div class="container">
+    <a href="../games.html" style="color: var(--accent); text-decoration: none; font-size: 0.85rem;">← Back to Games Hub</a>
+    <h1 style="margin-top: 0.5rem;">Half of the Average</h1>
+    <p class="subtitle">Enter a number between 0 and 100. The guess closest to half of the class average wins.</p>
 
-    <div class="card" id="player-card">
-        <h3>Submit Your Guess</h3>
-        <p id="timer-display">Waiting for timer...</p>
-        <input type="text" id="student-name" placeholder="Your Name" required>
-        <input type="text" id="class-id" placeholder="Class Code (e.g., ECON101)" required>
-        <input type="number" id="guess" min="0" max="100" step="any" placeholder="Enter a number (0 - 100)" required>
+    <!-- STUDENT SUBMISSION CARD -->
+    <div class="card">
+        <span class="status-badge">Student Portal</span>
+        <h2>Submit Your Guess</h2>
+        <div id="timer-display"></div>
+        
+        <label for="student-name">Your Name</label>
+        <input type="text" id="student-name" placeholder="e.g., Jane Doe" required>
+
+        <label for="class-id">Class Code</label>
+        <input type="text" id="class-id" placeholder="e.g., ECON101" required>
+
+        <label for="guess">Your Guess (0 - 100)</label>
+        <input type="number" id="guess" min="0" max="100" step="any" placeholder="Enter a number (e.g., 24.5)" required>
+
         <button id="submit-btn" onclick="submitGuess()">Submit Guess</button>
-        <p id="status-msg"></p>
+        <p id="status-msg" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--accent);"></p>
     </div>
 
+    <!-- INSTRUCTOR CONTROLS (Hidden by Default) -->
     <div class="card admin-panel" id="admin-card" style="display: none;">
-        <h3>Instructor Controls</h3>
-        <input type="text" id="admin-class-id" placeholder="Enter Class Code">
+        <h2>Instructor Controls</h2>
         
+        <label for="admin-class-id">Class Code</label>
+        <input type="text" id="admin-class-id" placeholder="Enter Class Code to Manage Session">
+        
+        <h3 style="margin-top: 1rem; font-size: 0.95rem;">Timer Control</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="number" id="timer-input" placeholder="Seconds" value="60" style="width: 35%;">
+            <button class="btn-secondary" onclick="startTimer()" style="margin-top: 0.25rem;">Start Countdown Timer</button>
+        </div>
+        
+        <button onclick="calculateWinner()">Calculate Winner</button>
+        <button class="btn-secondary" onclick="exportToCSV()">Export Class Data to CSV</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <!-- FOOTER ACCESS BUTTON -->
+    <button class="admin-toggle-btn" onclick="unlockAdmin()">🔒 Instructor Access</button>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+    // PASTE YOUR FIREBASE CONFIGURATION HERE
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let countdownInterval = null;
+
+    // --- INSTRUCTOR UNLOCK FUNCTION ---
+    function unlockAdmin() {
+        const password = prompt("Enter Instructor Passcode:");
+        // Replace '1234' with your preferred passcode
+        if (password === "1234") { 
+            const adminCard = document.getElementById('admin-card');
+            adminCard.style.display = 'block';
+            adminCard.scrollIntoView({ behavior: 'smooth' });
+        } else if (password !== null) {
+            alert("Incorrect passcode.");
+        }
+    }
+
+    // --- STUDENT SUBMISSION ---
+    function submitGuess() {
+        const name = document.getElementById('student-name').value.trim();
+        const classId = document.getElementById('class-id').value.trim().toUpperCase();
+        const guess = parseFloat(document.getElementById('guess').value);
+
+        if (!name || !classId || isNaN(guess) || guess < 0 || guess > 100) {
+            alert("Please complete all fields with a valid number between 0 and 100.");
+            return;
+        }
+
+        db.ref('games/' + classId).push({
+            name: name,
+            guess: guess,
+            timestamp: new Date().toISOString()
+        }).then(() => {
+            document.getElementById('status-msg').innerText = "Guess submitted successfully!";
+            document.getElementById('guess').value = '';
+        }).catch(error => {
+            alert("Error submitting: " + error.message);
+        });
+    }
+
+    // --- COUNTDOWN TIMER ---
+    function startTimer() {
+        const secondsInput = parseInt(document.getElementById('timer-input').value);
+        if (isNaN(secondsInput) || secondsInput <= 0) return alert("Enter valid seconds.");
+
+        let timeLeft = secondsInput;
+        const timerDisplay = document.getElementById('timer-display');
+        const submitBtn = document.getElementById('submit-btn');
+
+        submitBtn.disabled = false;
+        clearInterval(countdownInterval);
+
+        countdownInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                timerDisplay.innerText = "Time is up! Submissions closed.";
+                submitBtn.disabled = true;
+            } else {
+                timerDisplay.innerText = `Time Remaining: ${timeLeft}s`;
+                timeLeft--;
+            }
+        }, 1000);
+    }
+
+    // --- WINNER CALCULATION ---
+    function calculateWinner() {
+        const classId = document.getElementById('admin-class-id').value.trim().toUpperCase();
+        if (!classId) return alert("Enter a Class Code.");
+
+        db.ref('games/' + classId).once('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) {
+                document.getElementById('results').innerHTML = "<p style='margin-top:1rem;'>No submissions found for this class code.</p>";
+                return;
+            }
+
+            const entries = Object.values(data);
+            const total = entries.reduce((sum, entry) => sum + entry.guess, 0);
+            const average = total / entries.length;
+            const target = average / 2;
+
+            let winner = entries[0];
+            let minDifference = Math.abs(entries[0].guess - target);
+
+            entries.forEach(entry => {
+                const diff = Math.abs(entry.guess - target);
+                if (diff < minDifference) {
+                    minDifference = diff;
+                    winner = entry;
+                }
+            });
+
+            document.getElementById('results').innerHTML = `
+                <hr style="margin: 1rem 0; border: 0; border-top: 1px solid var(--border);">
+                <p><strong>Total Submissions:</strong> ${entries.length}</p>
+                <p><strong>Class Average:</strong> ${average.toFixed(4)}</p>
+                <p><strong>Target (Half Average):</strong> ${target.toFixed(4)}</p>
+                <p style="margin-top: 0.5rem; font-size: 1.05rem;">🏆 <strong>Winner:</strong> ${winner.name} (Guess: ${winner.guess})</p>
+            `;
+        });
+    }
+
+    // --- EXPORT TO CSV ---
+    function exportToCSV() {
+        const classId = document.getElementById('admin-class-id').value.trim().toUpperCase();
+        if (!classId) return alert("Enter a Class Code to export data.");
+
+        db.ref('games/' + classId).once('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) return alert("No data found to export.");
+
+            const entries = Object.values(data);
+            
+            let csvContent = "data:text/csv;charset=utf-8,Name,Guess,Timestamp\n";
+            entries.forEach(entry => {
+                csvContent += `"${entry.name}",${entry.guess},"${entry.timestamp}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `${classId}_half_average_data.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+</script>
+</body>
+</html>
         <div style="display: flex; gap: 0.5rem;">
             <input type="number" id="timer-input" placeholder="Seconds" value="60" style="width: 30%;">
             <button class="secondary-btn" onclick="startTimer()">Start Countdown Timer</button>
