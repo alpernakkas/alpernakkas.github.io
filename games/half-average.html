@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Half of the Average Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .card { border: 1px solid #ccc; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; }
+        input, button { padding: 0.5rem; margin: 0.5rem 0; width: 100%; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .secondary-btn { background: #6c757d; }
+        .secondary-btn:hover { background: #5a6268; }
+        .admin-panel { background: #f4f4f4; border-color: #aaa; }
+        #timer-display { font-size: 1.5rem; font-weight: bold; color: #d9534f; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h2>Half of the Average Game</h2>
+
+    <div class="card" id="player-card">
+        <h3>Submit Your Guess</h3>
+        <p id="timer-display">Waiting for timer...</p>
+        <input type="text" id="student-name" placeholder="Your Name" required>
+        <input type="text" id="class-id" placeholder="Class Code (e.g., ECON101)" required>
+        <input type="number" id="guess" min="0" max="100" step="any" placeholder="Enter a number (0 - 100)" required>
+        <button id="submit-btn" onclick="submitGuess()">Submit Guess</button>
+        <p id="status-msg"></p>
+    </div>
+
+    <div class="card admin-panel">
+        <h3>Instructor Controls</h3>
+        <input type="text" id="admin-class-id" placeholder="Enter Class Code">
+        
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="number" id="timer-input" placeholder="Seconds" value="60" style="width: 30%;">
+            <button class="secondary-btn" onclick="startTimer()">Start Countdown Timer</button>
+        </div>
+        
+        <button onclick="calculateWinner()">Calculate Winner</button>
+        <button class="secondary-btn" onclick="exportToCSV()">Export Class Data to CSV</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+    <script>
+        // REPLACE THIS WITH YOUR FIREBASE CONFIG OBJECT
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let countdownInterval = null;
+
+        // --- SUBMIT GUESS ---
+        function submitGuess() {
+            const name = document.getElementById('student-name').value.trim();
+            const classId = document.getElementById('class-id').value.trim().toUpperCase();
+            const guess = parseFloat(document.getElementById('guess').value);
+
+            if (!name || !classId || isNaN(guess) || guess < 0 || guess > 100) {
+                alert("Please complete all fields with a valid number between 0 and 100.");
+                return;
+            }
+
+            db.ref('games/' + classId).push({
+                name: name,
+                guess: guess,
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                document.getElementById('status-msg').innerText = "Guess submitted successfully!";
+                document.getElementById('guess').value = '';
+            }).catch(error => {
+                alert("Error submitting: " + error.message);
+            });
+        }
+
+        // --- COUNTDOWN TIMER ---
+        function startTimer() {
+            const secondsInput = parseInt(document.getElementById('timer-input').value);
+            if (isNaN(secondsInput) || secondsInput <= 0) return alert("Enter valid seconds.");
+
+            let timeLeft = secondsInput;
+            const timerDisplay = document.getElementById('timer-display');
+            const submitBtn = document.getElementById('submit-btn');
+
+            submitBtn.disabled = false;
+            clearInterval(countdownInterval);
+
+            countdownInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timerDisplay.innerText = "Time is up! Submissions closed.";
+                    submitBtn.disabled = true;
+                } else {
+                    timerDisplay.innerText = `Time Remaining: ${timeLeft}s`;
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        // --- WINNER CALCULATION ---
+        function calculateWinner() {
+            const classId = document.getElementById('admin-class-id').value.trim().toUpperCase();
+            if (!classId) return alert("Enter a Class Code.");
+
+            db.ref('games/' + classId).once('value', snapshot => {
+                const data = snapshot.val();
+                if (!data) {
+                    document.getElementById('results').innerHTML = "<p>No submissions found for this class code.</p>";
+                    return;
+                }
+
+                const entries = Object.values(data);
+                const total = entries.reduce((sum, entry) => sum + entry.guess, 0);
+                const average = total / entries.length;
+                const target = average / 2;
+
+                let winner = entries[0];
+                let minDifference = Math.abs(entries[0].guess - target);
+
+                entries.forEach(entry => {
+                    const diff = Math.abs(entry.guess - target);
+                    if (diff < minDifference) {
+                        minDifference = diff;
+                        winner = entry;
+                    }
+                });
+
+                document.getElementById('results').innerHTML = `
+                    <hr>
+                    <p><strong>Total Submissions:</strong> ${entries.length}</p>
+                    <p><strong>Class Average:</strong> ${average.toFixed(4)}</p>
+                    <p><strong>Target (Half Average):</strong> ${target.toFixed(4)}</p>
+                    <p>🏆 <strong>Winner:</strong> ${winner.name} (Guess: ${winner.guess})</p>
+                `;
+            });
+        }
+
+        // --- EXPORT TO CSV ---
+        function exportToCSV() {
+            const classId = document.getElementById('admin-class-id').value.trim().toUpperCase();
+            if (!classId) return alert("Enter a Class Code to export data.");
+
+            db.ref('games/' + classId).once('value', snapshot => {
+                const data = snapshot.val();
+                if (!data) return alert("No data found to export.");
+
+                const entries = Object.values(data);
+                
+                // Construct CSV content
+                let csvContent = "data:text/csv;charset=utf-8,Name,Guess,Timestamp\n";
+                entries.forEach(entry => {
+                    csvContent += `"${entry.name}",${entry.guess},"${entry.timestamp}"\n`;
+                });
+
+                // Trigger file download
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `${classId}_game_data.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+    </script>
+</body>
+</html>
