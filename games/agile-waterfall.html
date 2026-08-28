@@ -13,6 +13,7 @@
             --bg-card: #FFFFFF;
             --text-primary: #1A1A1A;
             --text-secondary: #555555;
+            --text-muted: #888888;
             --accent: #0C4A6E;
             --accent-light: #E0F2FE;
             --accent-hover: #075985;
@@ -44,6 +45,20 @@
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
         th, td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
         th { background: #F9FAFB; }
+        
+        .admin-toggle-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px dashed var(--border);
+            font-size: 0.78rem;
+            font-weight: 400;
+            padding: 0.4rem;
+            margin-top: 2rem;
+        }
+        .admin-toggle-btn:hover {
+            background: #E5E5E3;
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
@@ -51,12 +66,12 @@
 <div class="container">
     <a href="../games.html" style="color: var(--accent); text-decoration: none; font-size: 0.85rem;">← Back to Games Hub</a>
     <h1 style="margin-top: 0.5rem;">Agile vs. Waterfall Challenge</h1>
-    <p class="subtitle">Navigate changing project requirements across 4 operational phases.</p>
+    <p class="subtitle">Navigate changing project requirements across operational phases.</p>
 
     <!-- STUDENT DECISION CARD -->
     <div class="card">
-        <span class="status-badge" id="current-phase-badge">Phase 1 of 4</span>
-        <h2>Student Decision Portal</h2>
+        <span class="status-badge">Student Portal</span>
+        <h2>Submit Project Allocation</h2>
         
         <label for="team-name">Team / Student Name</label>
         <input type="text" id="team-name" placeholder="e.g., Team Alpha">
@@ -83,7 +98,7 @@
                 <input type="number" id="feat-ux" value="25" min="0" max="100">
             </div>
             <div>
-                <label for="feat-security">Security & Compliance</label>
+                <label for="feat-security">Security &amp; Compliance</label>
                 <input type="number" id="feat-security" value="25" min="0" max="100">
             </div>
             <div>
@@ -92,31 +107,32 @@
             </div>
         </div>
 
-        <button onclick="submitAllocation()">Submit Project Allocation</button>
+        <button onclick="submitAllocation()">Submit Allocation</button>
         <p id="student-status" style="margin-top: 0.5rem; font-size: 0.85rem;"></p>
     </div>
 
-    <!-- INSTRUCTOR DASHBOARD -->
+    <!-- INSTRUCTOR DASHBOARD (Hidden by Default) -->
     <div class="card admin-panel" id="admin-card" style="display: none;">
         <h2>Instructor Controls</h2>
         <label for="admin-class-code">Class Code</label>
         <input type="text" id="admin-class-code" placeholder="Enter Class Code">
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+        <h3 style="margin-top: 1rem; font-size: 0.95rem;">Current Phase Market Weights</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem;">
             <div>
-                <label for="market-core">Phase Weight: Core</label>
+                <label for="market-core">Weight: Core</label>
                 <input type="number" id="market-core" value="40">
             </div>
             <div>
-                <label for="market-ux">Phase Weight: UX</label>
+                <label for="market-ux">Weight: UX</label>
                 <input type="number" id="market-ux" value="30">
             </div>
             <div>
-                <label for="market-security">Phase Weight: Security</label>
+                <label for="market-security">Weight: Security</label>
                 <input type="number" id="market-security" value="20">
             </div>
             <div>
-                <label for="market-analytics">Phase Weight: Analytics</label>
+                <label for="market-analytics">Weight: Analytics</label>
                 <input type="number" id="market-analytics" value="10">
             </div>
         </div>
@@ -126,6 +142,9 @@
 
         <div id="leaderboard"></div>
     </div>
+
+    <!-- FOOTER ACCESS BUTTON -->
+    <button class="admin-toggle-btn" onclick="unlockAdmin()">🔒 Instructor Access</button>
 </div>
 
 <!-- Firebase SDKs -->
@@ -133,20 +152,34 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
 <script>
-   const firebaseConfig = {
-    apiKey: "AIzaSy...", 
-    authDomain: "your-project-id.firebaseapp.com",
-    databaseURL: "https://your-project-id-default-rtdb.firebaseio.com", // Ensure this line exists!
-    projectId: "your-project-id",
-    storageBucket: "your-project-id.appspot.com",
-    messagingSenderId: "123456789...",
-    appId: "1:123456789...:web:..."
-};
-
+    // PASTE YOUR FIREBASE CONFIGURATION HERE
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // --- INSTRUCTOR UNLOCK FUNCTION ---
+    function unlockAdmin() {
+        const password = prompt("Enter Instructor Passcode:");
+        // Replace '1234' with your preferred passcode
+        if (password === "nakkas") { 
+            const adminCard = document.getElementById('admin-card');
+            adminCard.style.display = 'block';
+            adminCard.scrollIntoView({ behavior: 'smooth' });
+        } else if (password !== null) {
+            alert("Incorrect passcode.");
+        }
+    }
+
+    // --- STUDENT SUBMISSION ---
     function submitAllocation() {
         const team = document.getElementById('team-name').value.trim();
         const code = document.getElementById('class-code').value.trim().toUpperCase();
@@ -174,6 +207,7 @@
         }).catch(err => alert("Error: " + err.message));
     }
 
+    // --- SCORING SYSTEM ---
     function calculateScores() {
         const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
         if (!code) return alert("Enter Class Code.");
@@ -192,7 +226,6 @@
 
             entries.forEach(teamKey => {
                 const team = data[teamKey];
-                // Alignment score calculation using dot product of team choices & market weights
                 const score = (team.core * (wCore/100)) + 
                               (team.ux * (wUX/100)) + 
                               (team.security * (wSec/100)) + 
@@ -210,6 +243,7 @@
         });
     }
 
+    // --- CSV EXPORT ---
     function exportData() {
         const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
         if (!code) return alert("Enter Class Code.");
@@ -230,13 +264,6 @@
             link.click();
         });
     }
-
-    // Show admin panel only if '?admin=true' is in the URL
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('admin') === 'true') {
-    document.getElementById('admin-card').style.display = 'block';
-}
-
 </script>
 </body>
 </html>
