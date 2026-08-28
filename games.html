@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Games — Dr. Alper Nakkas</title>
+    <meta name="description" content="Interactive classroom experiments and games for business analytics, game theory, and supply chain management courses.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent: #0C4A6E;
+            --accent-light: #E0F2FE;
+            --accent-hover: #075985;
+            --border: #E5E5E3;
+            --border-light: #F0F0EE;
+            --tag-bg: #F3F4F6;
+            --tag-text: #374151;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --radius: 10px;
+            --serif: 'Source Serif 4', Georgia, serif;
+            --sans: 'DM Sans', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(250,250,248,0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .nav-logo {
+            font-family: var(--serif);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .page-header {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 8rem 2rem 2rem;
+        }
+        .page-header h1 {
+            font-family: var(--serif);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+        .page-header p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        .section {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 2rem 2rem 5rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: box-shadow 0.25s, border-color 0.25s;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #D1D5DB;
+        }
+
+        .meta-line {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            color: var(--accent);
+            margin-bottom: 0.45rem;
+            text-transform: uppercase;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-bottom: 1.25rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+        }
+
+        .btn-launch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            background: var(--accent);
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .btn-launch:hover { background: var(--accent-hover); }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">A<span>.</span> Nakkas</a>
+            <div class="nav-links">
+                <a href="index.html#roles">Roles</a>
+                <a href="index.html#research">Research</a>
+                <a href="index.html#streams">Research Streams</a>
+                <a href="index.html#teaching">Teaching</a>
+                <a href="games.html" class="active">Games</a>
+                <a href="index.html#profile">Background</a>
+                <a href="https://nakkaslab.uta.edu/files/2025/10/AlperNakkas_CV-2025.pdf" target="_blank" rel="noopener">CV</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ PAGE HEADER ═══ -->
+    <header class="page-header">
+        <h1>Classroom Games &amp; Experiments</h1>
+        <p>Interactive web games designed for live classroom participation in Game Theory, Business Analytics, and Operations Management courses.</p>
+    </header>
+
+    <!-- ═══ GAMES LIST ═══ -->
+    <main class="section">
+        <div class="card-grid">
+
+            <!-- Game 1 -->
+            <div class="card">
+                <div>
+                    <p class="meta-line">Game Theory · Behavioral</p>
+                    <h2>Half of the Average</h2>
+                    <p>Students choose a real number between 0 and 100. The target is 50% of the class average. Demonstrates iterated dominance, rationalizability, and Keynesian beauty contests.</p>
+                    <div class="tags">
+                        <span class="tag">0 - 100 Scale</span>
+                        <span class="tag">Timer Enabled</span>
+                        <span class="tag">CSV Export</span>
+                    </div>
+                </div>
+                <a href="games/half-average.html" class="btn-launch">
+                    Launch Game 
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <!-- Future Game Slot Placeholder -->
+            <div class="card" style="opacity: 0.7; border-style: dashed;">
+                <div>
+                    <p class="meta-line">Coming Soon</p>
+                    <h2>Public Goods Game</h2>
+                    <p>Simulation exploring social dilemmas, free-riding incentives, and cooperation mechanisms in group environments.</p>
+                    <div class="tags">
+                        <span class="tag">Multi-round</span>
+                        <span class="tag">Behavioral</span>
+                    </div>
+                </div>
+                <span style="font-size:0.8rem; color:var(--text-muted); font-style:italic;">In Development</span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <p>&copy; 2026 Alper Nakkas · Associate Professor · <a href="https://www.uta.edu" target="_blank" rel="noopener">The University of Texas at Arlington</a></p>
+    </footer>
+
+</body>
+</html>
