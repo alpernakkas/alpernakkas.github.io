@@ -30,7 +30,7 @@
         <p id="status-msg"></p>
     </div>
 
-    <div class="card admin-panel">
+    <div class="card admin-panel" id="admin-card" style="display: none;">
         <h3>Instructor Controls</h3>
         <input type="text" id="admin-class-id" placeholder="Enter Class Code">
         
@@ -178,5 +178,13 @@
             });
         }
     </script>
+
+    // Show admin panel only if '?admin=true' is in the URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('admin') === 'true') {
+    document.getElementById('admin-card').style.display = 'block';
+}
+
 </body>
 </html>
+
