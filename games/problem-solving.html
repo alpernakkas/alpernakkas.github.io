@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Solving & Root Cause Simulation — Dr. Alper Nakkas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent: #0C4A6E;
+            --accent-light: #E0F2FE;
+            --accent-hover: #075985;
+            --border: #E5E5E3;
+            --radius: 10px;
+            --sans: 'DM Sans', -apple-system, sans-serif;
+            --serif: 'Source Serif 4', Georgia, serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text-primary); line-height: 1.6; padding: 2rem 1rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+        h1, h2, h3 { font-family: var(--serif); color: var(--text-primary); }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        
+        label { font-weight: 500; font-size: 0.85rem; display: block; margin-top: 0.75rem; }
+        input, select, button { width: 100%; padding: 0.6rem; margin-top: 0.25rem; border: 1px solid var(--border); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; }
+        button { background: var(--accent); color: white; font-weight: 600; cursor: pointer; border: none; margin-top: 1rem; transition: background 0.2s; }
+        button:hover { background: var(--accent-hover); }
+        .btn-secondary { background: #6C757D; }
+        .btn-secondary:hover { background: #5A6268; }
+
+        .status-badge { font-family: var(--mono); font-size: 0.8rem; background: var(--accent-light); color: var(--accent); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.5rem; }
+        
+        .resource-bar { display: flex; justify-content: space-between; background: #F3F4F6; padding: 0.75rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem; }
+        
+        .grid-nodes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .node-card { border: 1px solid var(--border); padding: 1rem; border-radius: 8px; background: #FAF9F6; }
+        .node-title { font-weight: 600; font-size: 0.95rem; color: var(--accent); }
+        .node-cost { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .node-log { background: #FFF; border: 1px solid var(--border); padding: 0.5rem; font-family: var(--mono); font-size: 0.75rem; min-height: 45px; border-radius: 4px; margin-top: 0.5rem; }
+
+        .admin-panel { background: #F3F4F6; border-color: #D1D5DB; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+        th, td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+        th { background: #F9FAFB; }
+
+        .admin-toggle-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px dashed var(--border);
+            font-size: 0.78rem;
+            font-weight: 400;
+            padding: 0.4rem;
+            margin-top: 2rem;
+        }
+        .admin-toggle-btn:hover { background: #E5E5E3; color: var(--text-primary); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../games.html" style="color: var(--accent); text-decoration: none; font-size: 0.85rem;">← Back to Games Hub</a>
+    <h1 style="margin-top: 0.5rem;">System Troubleshooting & Root Cause Challenge</h1>
+    <p class="subtitle">Investigate system failures under budget constraints and diagnose the true root cause.</p>
+
+    <!-- STUDENT DECISION PORTAL -->
+    <div class="card">
+        <span class="status-badge">Student Simulation</span>
+        <h2>Diagnostic Portal</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+                <label for="team-name">Team Name</label>
+                <input type="text" id="team-name" placeholder="e.g., Team Bravo">
+            </div>
+            <div>
+                <label for="class-code">Class Code</label>
+                <input type="text" id="class-code" placeholder="e.g., PM-MBA-2026">
+            </div>
+        </div>
+
+        <div class="resource-bar" style="margin-top: 1.25rem;">
+            <span>Diagnostic Budget Remaining: $<span id="budget-left">1000</span></span>
+            <span>Diagnostic Tests Run: <span id="tests-count">0</span></span>
+        </div>
+
+        <h3 style="font-size: 1rem;">Investigate System Components</h3>
+        <p style="font-size: 0.8rem; color: var(--text-secondary);">Spend diagnostic budget to run tests on nodes and reveal potential failure indicators.</p>
+
+        <div class="grid-nodes">
+            <!-- Node A -->
+            <div class="node-card">
+                <div class="node-title">Node A: Data Ingestion API</div>
+                <div class="node-cost">Test Cost: $200</div>
+                <button onclick="runTest('Node A', 200, 'Data latency is normal. Minor payload spikes observed.')">Run Diagnostic</button>
+                <div class="node-log" id="log-Node A">No diagnostic data gathered.</div>
+            </div>
+
+            <!-- Node B -->
+            <div class="node-card">
+                <div class="node-title">Node B: Database Indexing</div>
+                <div class="node-cost">Test Cost: $300</div>
+                <button onclick="runTest('Node B', 300, 'CRITICAL: High CPU utilization during heavy batch operations!')">Run Diagnostic</button>
+                <div class="node-log" id="log-Node B">No diagnostic data gathered.</div>
+            </div>
+
+            <!-- Node C -->
+            <div class="node-card">
+                <div class="node-title">Node C: Cache & CDN Memory</div>
+                <div class="node-cost">Test Cost: $150</div>
+                <button onclick="runTest('Node C', 150, 'Cache hit ratio at 94%. No memory leaks identified.')">Run Diagnostic</button>
+                <div class="node-log" id="log-Node C">No diagnostic data gathered.</div>
+            </div>
+
+            <!-- Node D -->
+            <div class="node-card">
+                <div class="node-title">Node D: Third-Party Auth Service</div>
+                <div class="node-cost">Test Cost: $250</div>
+                <button onclick="runTest('Node D', 250, 'Intermittent timeout errors (504 gateway timeout) on authentication calls.')">Run Diagnostic</button>
+                <div class="node-log" id="log-Node D">No diagnostic data gathered.</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 1.5rem; font-size: 1rem;">Final Root Cause Assessment</h3>
+        <label for="diagnosis-choice">Select Primary Root Cause</label>
+        <select id="diagnosis-choice">
+            <option value="">-- Select Root Cause Node --</option>
+            <option value="Node A">Node A: Data Ingestion API</option>
+            <option value="Node B">Node B: Database Indexing</option>
+            <option value="Node C">Node C: Cache & CDN Memory</option>
+            <option value="Node D">Node D: Third-Party Auth Service</option>
+        </select>
+
+        <button onclick="submitFinalDiagnosis()" style="background: #166534;">Submit Final Diagnosis</button>
+        <p id="student-status" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--accent); font-weight: 500;"></p>
+    </div>
+
+    <!-- INSTRUCTOR CONTROLS (Hidden by Default) -->
+    <div class="card admin-panel" id="admin-card" style="display: none;">
+        <h2>Instructor Controls</h2>
+        
+        <label for="admin-class-code">Class Code</label>
+        <input type="text" id="admin-class-code" placeholder="Enter Class Code">
+
+        <label for="correct-node">Set Actual Root Cause Node</label>
+        <select id="correct-node">
+            <option value="Node B">Node B: Database Indexing</option>
+            <option value="Node D">Node D: Third-Party Auth Service</option>
+        </select>
+
+        <button onclick="evaluateResults()">Evaluate Class Diagnosis Results</button>
+        <button class="btn-secondary" onclick="exportData()">Export Results to CSV</button>
+
+        <div id="leaderboard"></div>
+    </div>
+
+    <!-- FOOTER ACCESS BUTTON -->
+    <button class="admin-toggle-btn" onclick="unlockAdmin()">🔒 Instructor Access</button>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDWPyCQqF2HKa_QyPCjqq3byZx5AcPHVDw",
+  authDomain: "project-management-games-72709.firebaseapp.com",
+  databaseURL: "https://project-management-games-72709-default-rtdb.firebaseio.com",
+  projectId: "project-management-games-72709",
+  storageBucket: "project-management-games-72709.firebasestorage.app",
+  messagingSenderId: "512097332337",
+  appId: "1:512097332337:web:259d83f5d856d2807cbfd0",
+  measurementId: "G-XBFQ3F6RZV"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let budget = 1000;
+    let testsRun = 0;
+    let nodeLogs = {};
+
+    function runTest(nodeId, cost, logText) {
+        if (budget < cost) {
+            alert("Insufficient budget remaining to run this test!");
+            return;
+        }
+
+        budget -= cost;
+        testsRun += 1;
+        nodeLogs[nodeId] = logText;
+
+        document.getElementById('budget-left').innerText = budget;
+        document.getElementById('tests-count').innerText = testsRun;
+        document.getElementById(`log-${nodeId}`).innerText = logText;
+    }
+
+    function unlockAdmin() {
+        const password = prompt("Enter Instructor Passcode:");
+        if (password === "nakkas") { 
+            const adminCard = document.getElementById('admin-card');
+            adminCard.style.display = 'block';
+            adminCard.scrollIntoView({ behavior: 'smooth' });
+        } else if (password !== null) {
+            alert("Incorrect passcode.");
+        }
+    }
+
+    function submitFinalDiagnosis() {
+        const team = document.getElementById('team-name').value.trim();
+        const code = document.getElementById('class-code').value.trim().toUpperCase();
+        const choice = document.getElementById('diagnosis-choice').value;
+
+        if (!team || !code) return alert("Please enter Team Name and Class Code.");
+        if (!choice) return alert("Please select a Root Cause Node before submitting.");
+
+        db.ref(`problem_solving_game/${code}/${team}`).set({
+            diagnosis: choice,
+            budgetRemaining: budget,
+            testsRun: testsRun,
+            timestamp: new Date().toISOString()
+        }).then(() => {
+            document.getElementById('student-status').innerText = "Diagnosis submitted successfully!";
+        }).catch(err => alert("Error: " + err.message));
+    }
+
+    function evaluateResults() {
+        const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
+        const correctNode = document.getElementById('correct-node').value;
+        if (!code) return alert("Enter Class Code.");
+
+        db.ref(`problem_solving_game/${code}`).once('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) return alert("No submissions found.");
+
+            let html = `<table><tr><th>Team</th><th>Diagnosis</th><th>Accuracy</th><th>Budget Left</th><th>Tests Run</th></tr>`;
+            
+            Object.keys(data).forEach(teamKey => {
+                const team = data[teamKey];
+                const isCorrect = team.diagnosis === correctNode;
+                const statusHtml = isCorrect 
+                    ? `<span style="color: #166534; font-weight: bold;">✓ Correct</span>` 
+                    : `<span style="color: #d9534f; font-weight: bold;">✗ Incorrect</span>`;
+
+                html += `<tr>
+                    <td><strong>${teamKey}</strong></td>
+                    <td>${team.diagnosis}</td>
+                    <td>${statusHtml}</td>
+                    <td>$${team.budgetRemaining}</td>
+                    <td>${team.testsRun}</td>
+                </tr>`;
+            });
+
+            html += `</table>`;
+            document.getElementById('leaderboard').innerHTML = html;
+        });
+    }
+
+    function exportData() {
+        const code = document.getElementById('admin-class-code').value.trim().toUpperCase();
+        if (!code) return alert("Enter Class Code.");
+
+        db.ref(`problem_solving_game/${code}`).once('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) return alert("No data to export.");
+
+            let csv = "Team,Diagnosis,BudgetRemaining,TestsRun,Timestamp\n";
+            Object.keys(data).forEach(k => {
+                const t = data[k];
+                csv += `"${k}","${t.diagnosis}",${t.budgetRemaining},${t.testsRun},"${t.timestamp}"\n`;
+            });
+
+            const link = document.createElement("a");
+            link.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+            link.download = `${code}_problem_solving_data.csv`;
+            link.click();
+        });
+    }
+</script>
+</body>
+</html>
