@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Class login | Resource &amp; Cost Lab</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./login.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="logo" aria-hidden="true">▰</span><div>RESOURCE &amp; COST LAB<small>PROJECT MANAGEMENT</small></div></div>
+    <span class="course"><a href="../../games.html">Classroom Games</a></span>
+  </header>
+  <main class="login-main">
+    <section class="login-panel" aria-labelledby="login-heading">
+      <p class="eyebrow">CLASS LOGIN</p>
+      <h1 id="login-heading">Join your class</h1>
+      <p class="login-intro">Enter the code provided by your instructor to open the scheduling and cost simulation.</p>
+      <form id="class-login-form">
+        <label for="class-code">Class code</label>
+        <input id="class-code" name="code" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="80" required aria-describedby="code-help login-error">
+        <p id="code-help" class="hint">Use your current class code. Ask your instructor if you don’t have one.</p>
+        <p id="login-error" class="login-error" role="alert" hidden></p>
+        <button type="submit" class="login-submit">Open simulation</button>
+      </form>
+      <p class="login-privacy">No student name or email address is required.</p>
+      <a class="login-back" href="../../games.html">Back to Classroom Games</a>
+    </section>
+  </main>
+  <script type="module" src="./login.js"></script>
+</body>
+</html>

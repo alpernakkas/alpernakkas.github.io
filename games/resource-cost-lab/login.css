@@ -1,0 +1,13 @@
+.login-main{max-width:560px;padding:64px 24px;margin:0 auto}
+.login-panel{background:white;padding:36px;border:1px solid var(--line);border-radius:12px}
+.login-panel h1{font-size:32px;letter-spacing:-.8px}
+.login-intro{color:var(--muted);line-height:1.65;margin:18px 0 26px}
+.login-panel label{display:block;font-size:14px;font-weight:600;margin-bottom:9px}
+.login-panel input{width:100%;font:inherit;padding:13px}
+.login-submit{width:100%;border:0;border-radius:6px;background:var(--teal);color:white;font:600 15px 'DM Sans',sans-serif;padding:14px;margin-top:12px}
+.login-error{color:var(--red);font-size:14px;line-height:1.6}
+.login-privacy{color:var(--muted);font-size:13px;margin:22px 0}
+.login-back{color:var(--teal);font-size:14px;text-decoration:none}
+.login-back:hover{text-decoration:underline}
+.login-panel input:focus-visible,.login-panel button:focus-visible,.login-panel a:focus-visible{outline:3px solid #118fbc;outline-offset:3px}
+@media(max-width:760px){.login-main{padding:32px 16px}.login-panel{padding:25px}.login-panel h1{font-size:29px}}
