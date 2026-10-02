@@ -59,5 +59,12 @@ $('editor').addEventListener('change',e=>{const el=e.target,f=el.dataset.field;i
 $('tasks-tab').addEventListener('click',()=>{tab='tasks';editor();});$('resources-tab').addEventListener('click',()=>{tab='resources';editor();});
 $('challenge').addEventListener('click',()=>{$('goal').value=Math.max(1,baseline.duration-10);$('budget').value=Math.floor(baseline.cost*1.1);render();$('challenge').textContent='Challenge targets applied';});
 $('reset').addEventListener('click',()=>{ts=clone(tasks);rs=clone(resources);$('strategy').value='level';$('shock').value='none';$('overhead').value=250;$('goal').value=baseline.duration;$('budget').value=Math.ceil(baseline.cost/1000)*1000;$('challenge').textContent='Try the 2-week challenge';editor();render();});
+// The AI panel is a classroom demonstration only. It never contacts an AI service.
+$('agent-form').addEventListener('submit',event=>event.preventDefault());
+document.querySelectorAll('[data-prompt]').forEach(button=>button.addEventListener('click',()=>{
+ $('agent-prompt').value=button.dataset.prompt;
+ $('allow-overtime').checked=button.textContent!=='Avoid overtime';
+ $('agent-prompt').focus();
+}));
 editor();render();
 }
