@@ -2,7 +2,7 @@
 
 ## Resource & Cost Lab
 
-The browser-only simulator is in `games/resource-cost-lab/` and linked from Classroom Games. Its scheduling, resource, cost, editing, and disruption features require no backend or API key. Live AI controls are intentionally omitted from this GitHub Pages version.
+The browser-only simulator is in `games/resource-cost-lab/` and linked from Classroom Games. Its scheduling, resource, cost, editing, and disruption features require no backend or API key. The AI planning panel is a classroom demonstration: students can edit objectives and permissions, but live analysis is disabled. It has no AI connection, API requests, or API charges.
 
 To update it, copy the frontend assets and retain the static-only adaptations in `index.html` and `app.js`. Serve the repository with a local HTTP server to preview JavaScript modules. No build step is required.
 
