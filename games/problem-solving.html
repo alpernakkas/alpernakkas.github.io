@@ -186,11 +186,28 @@ const firebaseConfig = {
   measurementId: "G-XBFQ3F6RZV"
 };
 
-    firebase.initializeApp(firebaseConfig);
-    // Automatically sign in students anonymously in the background
-firebase.auth().signInAnonymously().catch(error => console.error(error));
+   firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
 
-    const db = firebase.database();
+let countdownInterval = null;
+
+// Disable submit button initially until anonymous authentication completes
+const submitBtn = document.getElementById('submit-btn');
+if (submitBtn) submitBtn.disabled = true;
+
+// Authenticate anonymously in the background
+auth.signInAnonymously()
+    .then(() => {
+        // Unlock button once authentication token is secured
+        if (submitBtn) submitBtn.disabled = false;
+        console.log("Anonymous authentication successful.");
+    })
+    .catch((error) => {
+        console.error("Auth error:", error);
+        alert("Authentication failed. Please refresh the page.");
+    });
+
 
     let budget = 1000;
     let testsRun = 0;
