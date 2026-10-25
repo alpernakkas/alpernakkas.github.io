@@ -184,6 +184,9 @@ const firebaseConfig = {
   measurementId: "G-XBFQ3F6RZV"
 };
     firebase.initializeApp(firebaseConfig);
+    // Automatically sign in students anonymously in the background
+firebase.auth().signInAnonymously().catch(error => console.error(error));
+
     const db = firebase.database();
 
     function toggleWaterfallLock() {
